@@ -1,0 +1,24 @@
+{
+  "name": "builder-electron",
+  "version": "1.0.0",
+  "description": "an builder and obsfucate for electron project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SattyaP/builder-electron.git"
+  },
+  "keywords": [
+    "builder",
+    "electron",
+    "obsfucate"
+  ],
+  "author": "SattyaP",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SattyaP/builder-electron/issues"
+  },
+  "homepage": "https://github.com/SattyaP/builder-electron#readme"
+}
