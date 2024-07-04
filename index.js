@@ -77,7 +77,7 @@ const processFiles = (src, dest, progressBar) => {
     });
 };
 
-function init(srcDir, distDir) {
+function rebuildCate(srcDir, distDir) {
     emptyDir(distDir);
 
     const allFiles = getAllFiles(srcDir);
@@ -98,4 +98,4 @@ function init(srcDir, distDir) {
     console.log("[INFO] Start Packaging...");
 }
 
-module.exports = init;
+module.exports = rebuildCate;

@@ -1,8 +1,9 @@
 {
-  "name": "builder-electron",
+  "name": "@alsavdev-software-automation/builder-electron",
   "version": "1.0.0",
   "description": "an builder and obsfucate for electron project",
   "main": "index.js",
+  "private": false,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/SattyaP/builder-electron/issues"
   },
-  "homepage": "https://github.com/SattyaP/builder-electron#readme"
+  "homepage": "https://github.com/SattyaP/builder-electron#readme",
+  "dependencies": {
+  },
+  "devDependencies": {}
 }
