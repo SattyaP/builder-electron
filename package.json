@@ -1,11 +1,14 @@
 {
-  "name": "builder-electron",
-  "version": "1.0.1",
+  "name": "@SattyaP/builder-electron",
+  "version": "1.0.2",
   "description": "an builder and obsfucate for electron project",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SattyaP/builder-electron.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@SattyaP"
   },
   "keywords": [
     "builder",
