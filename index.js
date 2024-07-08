@@ -32,7 +32,7 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
     return arrayOfFiles;
 };
 
-const processFiles = (src, dest, progressBar) => {
+const processFiles = (src, dest, progressBar, exclude) => {
     if (!fs.existsSync(dest)) {
         fs.mkdirSync(dest, {
             recursive: true,
@@ -43,8 +43,12 @@ const processFiles = (src, dest, progressBar) => {
         const srcFilePath = path.join(src, file);
         const destFilePath = path.join(dest, file);
 
+        if (exclude && exclude.includes(file)) {
+            return;
+        }
+
         if (fs.lstatSync(srcFilePath).isDirectory()) {
-            processFiles(srcFilePath, destFilePath, progressBar);
+            processFiles(srcFilePath, destFilePath, progressBar, exclude);
         } else if (path.extname(file) === ".js") {
             const inputCode = fs.readFileSync(srcFilePath, "utf8");
 
@@ -77,7 +81,7 @@ const processFiles = (src, dest, progressBar) => {
     });
 };
 
-function rebuildCate(srcDir, distDir) {
+function rebuildCate(srcDir, distDir, exclude = []) {
     emptyDir(distDir);
 
     const allFiles = getAllFiles(srcDir);
@@ -90,7 +94,7 @@ function rebuildCate(srcDir, distDir) {
     console.log("[INFO] Building files...");
     progressBar.start(totalFiles, 0);
 
-    processFiles(srcDir, distDir, progressBar);
+    processFiles(srcDir, distDir, progressBar, exclude);
 
     progressBar.stop();
 
