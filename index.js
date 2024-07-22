@@ -52,23 +52,26 @@ const processFiles = (src, dest, progressBar, exclude) => {
         } else if (path.extname(file) === ".js") {
             const inputCode = fs.readFileSync(srcFilePath, "utf8");
 
-            if (path.basename(srcFilePath) === "main.js") {
+            if (path.basename(srcFilePath) === "index.js") {
                 fs.copyFileSync(srcFilePath, destFilePath);
             } else {
                 const obfuscationResult = JavaScriptObfuscator.obfuscate(inputCode, {
-                    compact: true,
-                    controlFlowFlattening: true,
-                    controlFlowFlatteningThreshold: 1,
-                    numbersToExpressions: true,
-                    simplify: true,
-                    stringArray: true,
-                    stringArrayEncoding: ["base64"],
-                    stringArrayThreshold: 1,
-                    splitStrings: true,
-                    splitStringsChunkLength: 5,
-                    deadCodeInjection: true,
-                    deadCodeInjectionThreshold: 0.4,
-                    transformObjectKeys: true,
+                    "compact": true, 
+                    "controlFlowFlattening": true, 
+                    "controlFlowFlatteningThreshold": 0.8, 
+                    "numbersToExpressions": true, 
+                    "simplify": true, 
+                    "stringArray": true, 
+                    "stringArrayEncoding": ["base64"], 
+                    "stringArrayThreshold": 0.5, 
+                    "splitStrings": true, 
+                    "splitStringsChunkLength": 10, 
+                    "deadCodeInjection": true, 
+                    "deadCodeInjectionThreshold": 0.2, 
+                    "transformObjectKeys": true, 
+                    "renameGlobals": true, 
+                    "identifierNamesGenerator": "mangled", 
+                    "selfDefending": true
                 });
 
                 fs.writeFileSync(destFilePath, obfuscationResult.getObfuscatedCode());
