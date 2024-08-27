@@ -19,7 +19,7 @@ U need to have access to use this package call the dev first !
 To use the `rebuildCate` function, import it into your code and call it with the appropriate parameters:
 
 ```javascript
-const { rebuildCate } = require("builder-electron");
+const { rebuildCate } = require("@sattyap/builder-electron");
 
 rebuildCate(srcDir, distSrc);
 ```
@@ -32,7 +32,7 @@ Here's an example of how you can use this package in your Electron application:
 
 ```javascript
 const { app } = require("electron");
-const { rebuildCate } = require("builder-electron");
+const { rebuildCate } = require("@sattyap/builder-electron");
 
 // Build the app using the `rebuildCate` function
 rebuildCate("src", "dist");
