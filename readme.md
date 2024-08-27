@@ -7,8 +7,12 @@ This package is a powerful builder for Electron applications, combined with obfu
 To install this package, run the following command:
 
 ```bash
-npm install builder-electron
+npm install @sattyap/builder-electron
 ```
+
+## Important 
+
+U need to have access to use this package call the dev first !
 
 ## Usage
 
@@ -32,4 +36,13 @@ const { rebuildCate } = require("builder-electron");
 
 // Build the app using the `rebuildCate` function
 rebuildCate("src", "dist");
+```
+
+## Params function
+
+You can exclude some files or you can still build but without obsfucate that files
+```javascript
+// Note : Use [] if that ignored files, or exlude obsfucate on files more than 1
+
+rebuildCate("src", "dist", ["Name of files ignored"], ["Name files wont obsfucate"]);
 ```

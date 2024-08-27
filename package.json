@@ -1,6 +1,6 @@
 {
   "name": "@sattyap/builder-electron",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "an builder and obsfucate for electron project",
   "main": "index.js",
   "repository": {
