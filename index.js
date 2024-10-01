@@ -32,6 +32,23 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
     return arrayOfFiles;
 };
 
+const copyDirectory = (src, dest) => {
+    if (!existsSync(dest)) {
+        mkdirSync(dest, { recursive: true });
+    }
+
+    readdirSync(src).forEach((file) => {
+        const srcFilePath = join(src, file);
+        const destFilePath = join(dest, file);
+
+        if (lstatSync(srcFilePath).isDirectory()) {
+            copyDirectory(srcFilePath, destFilePath);
+        } else {
+            copyFileSync(srcFilePath, destFilePath);
+        }
+    });
+};
+
 const processFiles = (src, dest, progressBar, excludeObfuscation, excludeCopy) => {
     if (!existsSync(dest)) {
         mkdirSync(dest, {
@@ -48,7 +65,11 @@ const processFiles = (src, dest, progressBar, excludeObfuscation, excludeCopy) =
         }
 
         if (lstatSync(srcFilePath).isDirectory()) {
-            processFiles(srcFilePath, destFilePath, progressBar, excludeObfuscation, excludeCopy);
+            if (excludeObfuscation && excludeObfuscation.includes(file)) {
+                copyDirectory(srcFilePath, destFilePath);
+            } else {
+                processFiles(srcFilePath, destFilePath, progressBar, excludeObfuscation, excludeCopy);
+            }
         } else if (extname(file) === ".js") {
             const inputCode = readFileSync(srcFilePath, "utf8");
 
