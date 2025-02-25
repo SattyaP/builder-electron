@@ -45,6 +45,7 @@ const { rebuildCate } = require("@sattyap/builder-electron");
 rebuildCate("src", "dist");
 ```
 
+Here's an example with google closure compiler
 ```javascript
 const { buildProject } = require("@sattyap/builder-project");
 
