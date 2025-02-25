@@ -45,6 +45,12 @@ const { rebuildCate } = require("@sattyap/builder-electron");
 rebuildCate("src", "dist");
 ```
 
+```javascript
+const { buildProject } = require("@sattyap/builder-project");
+
+buildProject(srcDir, distSrc);
+```
+
 ## Params function
 
 You can exclude some files or you can still build but without obsfucate that files
