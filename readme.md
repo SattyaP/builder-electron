@@ -8,6 +8,13 @@ To install this package, run the following command:
 
 ```bash
 npm install @sattyap/builder-electron
+
+IMPORTANT !
+
+yarn global add google-closure-compiler
+# OR
+npm i -g google-closure-compiler
+
 ```
 
 ## Important 

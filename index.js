@@ -1,7 +1,14 @@
 const JavaScriptObfuscator = require("javascript-obfuscator");
 const cliProgress = require("cli-progress");
-const { join, extname } = require("path");
-const { existsSync, readdirSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } = require("fs");
+const { join, extname, resolve, dirname, relative } = require("path");
+const { existsSync, readdirSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync, statSync } = require("fs");
+const { exec } = require('child_process');
+
+/**
+ * Compile JavaScript files with Google Closure Compiler and copy non-JS files.
+ * @param {string} srcDir - Source directory containing files.
+ * @param {string} distDir - Destination directory for compiled/copied files.
+ */
 
 const emptyDir = (dirPath) => {
     if (existsSync(dirPath)) {
@@ -126,4 +133,53 @@ function rebuildCate(srcDir, distDir, excludeObfuscation = [], excludeCopy = [])
     console.log("[INFO] Start Packaging...");
 }
 
-module.exports = rebuildCate;
+function buildProject(srcDir, distDir) {
+    srcDir = resolve(srcDir);
+    distDir = resolve(distDir);
+
+    rmSync(distDir, { recursive: true, force: true });
+    mkdirSync(distDir, { recursive: true });
+
+    console.log('🚀 Starting build...\n');
+
+    const copyFile = (src, dest) => {
+        mkdirSync(dirname(dest), { recursive: true });
+        copyFileSync(src, dest);
+    };
+
+    const compileJsFile = (src, dest) => {
+        mkdirSync(dirname(dest), { recursive: true });
+
+        exec(`google-closure-compiler --js "${src}" --js_output_file "${dest}"`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`❌ Error compiling ${src}`);
+            } else if (stderr) {
+                console.warn(`⚠️ Warning: ${stderr}`);
+            } else {
+                console.log(`✅ Compiled: ${src} -> ${dest}`);
+            }
+        });
+    };
+
+    const processFiles = (dir) => {
+        readdirSync(dir).forEach((file) => {
+            const filePath = join(dir, file);
+            const relPath = relative(srcDir, filePath);
+            const outPath = join(distDir, relPath);
+
+            if (statSync(filePath).isDirectory()) {
+                processFiles(filePath);
+            } else if (file.endsWith('.js')) {
+                compileJsFile(filePath, outPath);
+            } else {
+                copyFile(filePath, outPath);
+                console.log(`📂 Copied: ${filePath} -> ${outPath}`);
+            }
+        });
+    };
+
+    processFiles(srcDir);
+    console.log("\n🎉 Build completed!");
+}
+
+module.exports = { rebuildCate, buildProject };
