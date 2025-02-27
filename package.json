@@ -1,6 +1,6 @@
 {
   "name": "@sattyap/builder-electron",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "an builder and obsfucate for electron project",
   "main": "index.js",
   "repository": {
@@ -24,5 +24,8 @@
   "dependencies": {
     "cli-progress": "^3.12.0",
     "javascript-obfuscator": "^4.1.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
   }
 }

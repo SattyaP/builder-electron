@@ -1,5 +1,6 @@
 const JavaScriptObfuscator = require("javascript-obfuscator");
 const cliProgress = require("cli-progress");
+const esbuild = require('esbuild');
 const { join, extname, resolve, dirname, relative } = require("path");
 const { existsSync, readdirSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync, statSync } = require("fs");
 const { exec } = require('child_process');
@@ -182,4 +183,43 @@ function buildProject(srcDir, distDir) {
     console.log("\n🎉 Build completed!");
 }
 
-module.exports = { rebuildCate, buildProject };
+function esBuildProject(srcDir, outDir) {
+    function clearDist() {
+        if (existsSync(outDir)) {
+            rmSync(outDir, { recursive: true, force: true });
+        }
+        mkdirSync(outDir, { recursive: true });
+    }
+
+    function copyFiles(src, dest) {
+        readdirSync(src).forEach(file => {
+            const srcPath = join(src, file);
+            const destPath = join(dest, file);
+
+            if (statSync(srcPath).isDirectory()) {
+                mkdirSync(destPath, { recursive: true });
+                copyFiles(srcPath, destPath);
+            } else if (!file.endsWith('.js')) {
+                copyFileSync(srcPath, destPath);
+            }
+        });
+    }
+
+    clearDist();
+    copyFiles(srcDir, outDir);
+
+    const entryPoints = readdirSync(srcDir)
+        .filter(file => file.endsWith('.js'))
+        .map(file => join(srcDir, file));
+
+    return esbuild.build({
+        entryPoints,
+        bundle: true,
+        minify: true,
+        platform: 'node',
+        external: ['electron'],
+        outdir: outDir,
+    });
+}
+
+module.exports = { rebuildCate, buildProject, esBuildProject };
