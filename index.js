@@ -205,12 +205,23 @@ function esBuildProject(srcDir, outDir) {
         });
     }
 
+    function getJsFiles(dir) {
+        let files = [];
+        readdirSync(dir).forEach(file => {
+            const filePath = join(dir, file);
+            if (statSync(filePath).isDirectory()) {
+                files = files.concat(getJsFiles(filePath));
+            } else if (file.endsWith('.js')) {
+                files.push(filePath);
+            }
+        });
+        return files;
+    }
+
     clearDist();
     copyFiles(srcDir, outDir);
 
-    const entryPoints = readdirSync(srcDir)
-        .filter(file => file.endsWith('.js'))
-        .map(file => join(srcDir, file));
+    const entryPoints = getJsFiles(srcDir);
 
     return esbuild.build({
         entryPoints,
@@ -218,6 +229,8 @@ function esBuildProject(srcDir, outDir) {
         minify: true,
         platform: 'node',
         external: ['electron'],
+        format: 'esm',
+        metafile: true,
         outdir: outDir,
     });
 }
