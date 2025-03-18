@@ -11,12 +11,12 @@ npm install @sattyap/builder-electron
 
 IMPORTANT !
 
-// with google compiler
+# with google compiler
 yarn global add google-closure-compiler
 # OR
 npm i -g google-closure-compiler
 
-//  with esbuild
+#  with esbuild
 yarn global add esbuild
 # OR
 npm i -g esbuild
