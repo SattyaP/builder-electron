@@ -17,9 +17,9 @@ yarn global add google-closure-compiler
 npm i -g google-closure-compiler
 
 //  with esbuild
-yarn global add google-closure-compiler
+yarn global add esbuild
 # OR
-npm i -g google-closure-compiler
+npm i -g esbuild
 
 ```
 
