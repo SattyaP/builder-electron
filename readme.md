@@ -60,7 +60,7 @@ buildProject(srcDir, distSrc);
 
 Here's an example with esbuild compiler
 ```javascript
-const { buildProject } = require("@sattyap/builder-project");
+const { esBuildProject } = require("@sattyap/builder-project");
 
 esBuildProject(srcDir, distSrc);
 ```
