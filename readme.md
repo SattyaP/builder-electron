@@ -11,6 +11,12 @@ npm install @sattyap/builder-electron
 
 IMPORTANT !
 
+// with google compiler
+yarn global add google-closure-compiler
+# OR
+npm i -g google-closure-compiler
+
+//  with esbuild
 yarn global add google-closure-compiler
 # OR
 npm i -g google-closure-compiler
@@ -50,6 +56,13 @@ Here's an example with google closure compiler
 const { buildProject } = require("@sattyap/builder-project");
 
 buildProject(srcDir, distSrc);
+```
+
+Here's an example with esbuild compiler
+```javascript
+const { buildProject } = require("@sattyap/builder-project");
+
+esBuildProject(srcDir, distSrc);
 ```
 
 ## Params function
