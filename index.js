@@ -2,7 +2,7 @@ const JavaScriptObfuscator = require("javascript-obfuscator")
 const cliProgress = require("cli-progress")
 const esbuild = require('esbuild')
 const { join, extname, resolve, dirname, relative } = require("path")
-const { readdir, writeFile, copyFile, stat, existsSync, readdirSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync, statSync, access, rm, mkdir } = require("fs").promises
+const { readFile, readdir, writeFile, copyFile, stat, existsSync, readdirSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, rmSync, statSync, access, rm, mkdir } = require("fs").promises
 const { exec } = require('child_process')
 
 /**
