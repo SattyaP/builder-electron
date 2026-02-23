@@ -252,40 +252,67 @@ function esBuildProject(srcDir, outDir) {
     })
 }
 
-async function buildAndObfuscate(srcDir, destDir) {
+async function buildAndObfuscate(srcDir, destDir, options = {}) {
+    const { excludeCopy = [], rootSrc } = options
+    const root = rootSrc || srcDir
+
+    const normalizedExcludes = excludeCopy.map(e => e.replace(/\\/g, '/').replace(/^\/+|\/+$/g, ''))
+
     try {
-        await access(srcDir);
+        await access(srcDir)
 
-        console.log(`🧹 Cleaning destination directory: ${destDir}`);
-        await rm(destDir, { recursive: true, force: true });
-        await mkdir(destDir, { recursive: true });
+        const relToRoot = relative(root, srcDir).replace(/\\/g, '/').replace(/^\/+|\/+$/g, '')
+        const baseName = srcDir.split(/[\\/]/).pop() || ''
 
-        console.log(`🚀 Starting build from '${srcDir}' to '${destDir}'...`);
+        if (normalizedExcludes.includes(relToRoot) || normalizedExcludes.includes(baseName)) {
+            console.log(`⛔ Skipping excluded folder: ${srcDir}`)
+            return
+        }
 
-        const items = await readdir(srcDir);
+        if (!relToRoot) {
+            console.log(`🧹 Cleaning destination directory: ${destDir}`)
+            await rm(destDir, { recursive: true, force: true })
+            await mkdir(destDir, { recursive: true })
+        } else {
+            await mkdir(destDir, { recursive: true })
+        }
+
+        console.log(`🚀 Processing: '${srcDir}' -> '${destDir}'`)
+
+        const items = await readdir(srcDir)
 
         for (const item of items) {
-            const srcPath = join(srcDir, item);
-            const destPath = join(destDir, item);
-            const stats = await stat(srcPath);
+            const srcPath = join(srcDir, item)
+            const destPath = join(destDir, item)
+            const stats = await stat(srcPath)
 
             if (stats.isDirectory()) {
-                await buildAndObfuscate(srcPath, destPath);
+                const relChild = relative(root, srcPath).replace(/\\/g, '/').replace(/^\/+|\/+$/g, '')
+                const childBase = item
+
+                if (normalizedExcludes.includes(relChild) || normalizedExcludes.includes(childBase)) {
+                    console.log(`⛔ Skipping excluded folder: ${srcPath}`)
+                    continue
+                }
+
+                await buildAndObfuscate(srcPath, destPath, { excludeCopy: normalizedExcludes, rootSrc: root })
             } else if (extname(srcPath) === '.js') {
-                console.log(`🔒 Obfuscating: ${srcPath}`);
-                const code = await readFile(srcPath, 'utf8');
-                const obfuscatedCode = JavaScriptObfuscator.obfuscate(code, obfuscatorOptions).getObfuscatedCode();
-                await writeFile(destPath, obfuscatedCode, 'utf8');
+                console.log(`🔒 Obfuscating: ${srcPath}`)
+                const code = await readFile(srcPath, 'utf8')
+                const obfuscatedCode = JavaScriptObfuscator.obfuscate(code, obfuscatorOptions).getObfuscatedCode()
+                await mkdir(dirname(destPath), { recursive: true })
+                await writeFile(destPath, obfuscatedCode, 'utf8')
             } else {
-                console.log(`📄 Copying: ${srcPath}`);
-                await copyFile(srcPath, destPath);
+                console.log(`📄 Copying: ${srcPath}`)
+                await mkdir(dirname(destPath), { recursive: true })
+                await copyFile(srcPath, destPath)
             }
         }
     } catch (error) {
-        if (error.code === 'ENOENT') {
-            throw new Error(`Source directory not found: ${srcDir}`);
+        if (error && error.code === 'ENOENT') {
+            throw new Error(`Source directory not found: ${srcDir}`)
         }
-        throw error;
+        throw error
     }
 }
 
